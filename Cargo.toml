@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+members = ["crates/baka-av3a-core", "crates/baka-av3a-container", "crates/baka-av3a-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100.0"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/Zencok/baka-av3a"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
