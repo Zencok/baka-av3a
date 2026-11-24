@@ -34,13 +34,26 @@ impl ImdctPlan {
         let lines = self.phases.len() * 2;
         assert_eq!(spectrum.len(), lines);
         let (mut real, mut imag) = (vec![0.0; lines / 2], vec![0.0; lines / 2]);
+        let mut signal = vec![0.0; lines * 2];
+        self.run_into(spectrum, &mut real, &mut imag, &mut signal);
+        signal
+    }
+
+    fn run_into(&self, spectrum: &[f32], real: &mut [f32], imag: &mut [f32], signal: &mut [f32]) {
+        let lines = self.phases.len() * 2;
+        assert_eq!(spectrum.len(), lines);
+        assert_eq!(
+            (real.len(), imag.len(), signal.len()),
+            (lines / 2, lines / 2, lines * 2)
+        );
         for (i, &(cos, sin)) in self.phases.iter().enumerate() {
             let (a, b) = (-spectrum[i * 2], spectrum[lines - 1 - i * 2]);
             real[i] = a * cos - b * sin;
             imag[i] = b * cos + a * sin;
         }
-        self.fft.run(&mut real, &mut imag, true);
-        let mut signal = vec![0.0; lines * 2];
+        self.fft.run(real, imag, true);
+        // The mirrored writes below cover all 2 * lines samples, including
+        // when the caller reuses a previous short block's output buffer.
         for (i, &(cos, sin)) in self.phases.iter().enumerate() {
             let r = (0.5 * (real[i] * cos - imag[i] * sin)) as f64 * self.scale;
             let j = (0.5 * (imag[i] * cos + real[i] * sin)) as f64 * self.scale;
@@ -54,7 +67,6 @@ impl ImdctPlan {
             }
             signal[lines / 2 + i * 2] = j as f32;
         }
-        signal
     }
 
     pub(crate) fn forward(&self, signal: &[f32]) -> Vec<f32> {
@@ -132,8 +144,11 @@ impl Synthesis {
             let mut history = [0.0; 128];
             history.copy_from_slice(&self.overlap[448..576]);
             let mut current = [0.0; 1024];
+            // Eight short transforms share 1.5 KiB of bounded local workspace.
+            // Keep this out of stream state so checkpoint clones stay unchanged.
+            let (mut real, mut imag, mut time) = ([0.0; 64], [0.0; 64], [0.0; 256]);
             for (block, chunk) in spectrum.as_chunks::<128>().0.iter().enumerate() {
-                let time = self.short.run(chunk);
+                self.short.run_into(chunk, &mut real, &mut imag, &mut time);
                 for i in 0..128 {
                     current[block * 128 + i] = time[i] * self.short_window[i] + history[i];
                     history[i] = time[128 + i] * self.short_window[127 - i];

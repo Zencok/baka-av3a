@@ -64,3 +64,41 @@ application update, or device listening/performance validation was performed.
 Release 0.1.1 includes this optimization. The BakaMusicFlutter application can
 consume the published core and container 0.1.1 packages without a Git dependency.
 Publication does not update an installed application; rebuilding remains required.
+
+## 2026-11-24: short-window IMDCT workspace
+
+Source after release 0.1.1 uses caller-owned scratch for the eight 128-line
+transforms in `Synthesis::process(..., 1)`. Two 64-float FFT arrays and one
+256-float time array occupy 1.5 KiB on the stack and are reused for every block.
+Every element is overwritten before reuse. The multiply/add order, windows,
+overlap commit and error checks are unchanged. No extra state is cloned for
+decoder checkpoints. Long-window and forward-transform allocation behavior is
+unchanged; this is not a claim of allocation-free packet decoding.
+
+Windows x86-64, Rust 1.100.0, release build: a local thread-scoped counting
+allocator measured 24 allocations before and zero after for one short-window
+process call, excluding initialization. The allocator harness remains ignored
+under `.local/`; the committed workspace continues to forbid unsafe code.
+A seven-round host microbenchmark (2,000 short frames per round) measured a
+24.188 ms median before and 17.107 ms after. This single-host measurement does
+not establish whole-decoder throughput, Android performance or battery savings.
+Reproduce current timing with:
+
+```powershell
+cargo test --locked -p baka-av3a-core --release --test synthesis_workspace short_window_measurement -- --ignored --nocapture
+```
+
+The PCM regression records the pre-change `e4cf76c` output hash for 128 frames
+(131,072 float32 samples), exercising long/start/short/stop transitions, signed
+zero and subnormal inputs. Separate checks reject NaN, infinity and finite
+overflow without corrupting the next short frame, and compare reset output
+bits against a fresh synthesis instance. Existing local mode matrices retain
+the independent signed-16 PCM and MCR references described above.
+
+Final validation: workspace fmt/check and strict all-target Clippy passed;
+workspace tests passed 192 tests with 35 optional/manual tests ignored. All six
+local release mode-matrix tests passed against the existing independent records.
+
+This source change is not included in published 0.1.1 or the application's
+locked dependencies. No new package release, application build or device
+verification is implied.

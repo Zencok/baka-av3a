@@ -61,6 +61,11 @@ your player's latency requirements. Current APIs allocate owned frames and worki
 they do not promise callback-time zero allocation. Measure asset initialization, first
 packet decoding, steady decoding, network startup and device output separately.
 
+Short-window synthesis reuses 1.5 KiB of local stack workspace across its eight
+IMDCT blocks, avoiding 24 heap allocations per channel/frame. Workspace is not
+stored in `Synthesis`, so checkpoint size, clone behavior and committed overlap
+history are unchanged. Long-window and forward transforms retain owned buffers.
+
 Optional `render` APIs operate on PCM and explicit configurations. They do not add a
 requirement to use room acoustics, measured HRIR data or head tracking in ordinary playback.
 See [optional spatial processing](docs/spatial-rendering.md) for their boundary.

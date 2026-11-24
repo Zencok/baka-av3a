@@ -31,6 +31,10 @@ GDN/IGDN inference reuses per-line input squares while retaining the original
 floating-point accumulation order. See [normalization measurements and validation
 limits](../../PERFORMANCE.md) for host results and reproducible checks.
 
+Source after 0.1.1 also reuses bounded short-window IMDCT workspace, eliminating
+its 24 temporary allocations per channel/frame. This does not make the whole
+decoder allocation-free; the published 0.1.1 package predates this change.
+
 [Documentation and asset formats](https://github.com/Zencok/baka-av3a)
 · [Chinese documentation](https://github.com/Zencok/baka-av3a/blob/main/README.zh-CN.md)
 
