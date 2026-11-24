@@ -66,12 +66,18 @@ fn activate(layer: &Layer, values: &mut [f32]) -> Result<(), Error> {
         return Err(Error::Invalid("network preactivation"));
     }
     if matches!(layer.activation, Activation::Gdn | Activation::Igdn) {
-        let original = values.to_vec();
+        // Every output at this line consumes the same original input squares.
+        // Cache them before writing any normalized values; other lines remain
+        // untouched. Preserve dot's four-lane f32 accumulation order.
+        let mut squared = vec![0.; layer.output_channels];
         for line in 0..layer.output_lines {
+            for (input, square) in squared.iter_mut().enumerate() {
+                let value = values[input * layer.output_lines + line];
+                *square = value * value;
+            }
             for output in 0..layer.output_channels {
                 let norm = dot(layer.output_channels, |input| {
-                    let value = original[input * layer.output_lines + line];
-                    value * value * layer.gamma[input * layer.output_channels + output]
+                    squared[input] * layer.gamma[input * layer.output_channels + output]
                 });
                 let norm = norm + layer.beta[output];
                 if !norm.is_finite() || norm <= 0.0 {
@@ -102,6 +108,9 @@ fn activate(layer: &Layer, values: &mut [f32]) -> Result<(), Error> {
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod normalization_tests;
 
 // Preserve the four independent accumulation lanes and final remainder sum.
 fn dot(count: usize, mut product: impl FnMut(usize) -> f32) -> f32 {

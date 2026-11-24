@@ -27,6 +27,10 @@ third-order HOA require additional caller-provided codebooks/basis. Objects and 
 produce transport channels/components, not automatically rendered speaker output.
 Optional `render` APIs are separate from decoding.
 
+GDN/IGDN inference reuses per-line input squares while retaining the original
+floating-point accumulation order. See [normalization measurements and validation
+limits](../../PERFORMANCE.md) for host results and reproducible checks.
+
 [Documentation and asset formats](https://github.com/Zencok/baka-av3a)
 · [Chinese documentation](https://github.com/Zencok/baka-av3a/blob/main/README.zh-CN.md)
 
