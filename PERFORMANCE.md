@@ -99,6 +99,6 @@ Final validation: workspace fmt/check and strict all-target Clippy passed;
 workspace tests passed 192 tests with 35 optional/manual tests ignored. All six
 local release mode-matrix tests passed against the existing independent records.
 
-This source change is not included in published 0.1.1 or the application's
-locked dependencies. No new package release, application build or device
-verification is implied.
+Release 0.1.2 includes this change. Applications must update their locked
+dependencies and rebuild to use it. Publication does not imply an installed
+application update or new device verification.

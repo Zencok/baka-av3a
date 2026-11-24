@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.2 - 2026-11-24
+
+- Reuse 1.5 KiB of local workspace across the eight short-window IMDCT blocks,
+  removing 24 temporary allocations per channel/frame.
+- Preserve transform arithmetic, overlap history, checkpoint size and errors.
+- Add pre-change PCM bit-pattern, transition, failure/reset regressions and an
+  opt-in host benchmark. No API, model or codebook format changes.
+- Keep core, container and CLI versions aligned. See PERFORMANCE.md for scope.
+
 ## 0.1.1 — 2026-11-24
 
 - Reuse per-line input squares in GDN/IGDN inference while preserving float

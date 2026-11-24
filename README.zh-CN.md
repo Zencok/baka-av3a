@@ -11,7 +11,7 @@
 ## 快速开始
 
 ```sh
-cargo install baka-av3a-cli --version 0.1.1 --locked
+cargo install baka-av3a-cli --version 0.1.2 --locked
 baka-av3a inspect input.mp4
 baka-av3a decode input.mp4 output.wav MODEL.bin LSF.bin
 ```
@@ -31,8 +31,8 @@ cargo run --release -p baka-av3a-cli -- decode input.mp4 output.wav MODEL.bin LS
 
 ```toml
 [dependencies]
-baka-av3a-core = "0.1.1"
-baka-av3a-container = "0.1.1" # 按需添加 MP4 支持
+baka-av3a-core = "0.1.2"
+baka-av3a-container = "0.1.2" # 按需添加 MP4 支持
 ```
 
 ```rust,no_run
