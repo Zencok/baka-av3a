@@ -4,7 +4,7 @@ Command-line AV3A inspection, extraction and signed 16-bit PCM WAV decoding in p
 Requires Rust 1.100.0.
 
 ```sh
-cargo install baka-av3a-cli --version 0.1.0 --locked
+cargo install baka-av3a-cli --version 0.1.1 --locked
 baka-av3a inspect input.mp4
 baka-av3a decode input.mp4 output.wav MODEL.bin LSF.bin
 ```

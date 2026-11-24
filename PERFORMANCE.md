@@ -61,7 +61,6 @@ real-stream float32 PCM sample is bit-identical. The new normalization-specific
 fixtures do compare float32 bits directly. No new Android/Apple build, installed
 application update, or device listening/performance validation was performed.
 
-The BakaMusicFlutter application currently consumes the published 0.1.0 crate.
-Pushing this repository does not replace that published package or automatically
-update the application's locked dependency. Package publication or a separate
-application dependency update is outside this change.
+Release 0.1.1 includes this optimization. The BakaMusicFlutter application can
+consume the published core and container 0.1.1 packages without a Git dependency.
+Publication does not update an installed application; rebuilding remains required.

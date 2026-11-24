@@ -12,7 +12,7 @@ Requires **Rust 1.100.0**, edition 2024.
 ## Quick start
 
 ```sh
-cargo install baka-av3a-cli --version 0.1.0 --locked
+cargo install baka-av3a-cli --version 0.1.1 --locked
 baka-av3a inspect input.mp4
 baka-av3a decode input.mp4 output.wav MODEL.bin LSF.bin
 ```
@@ -34,8 +34,8 @@ cargo run --release -p baka-av3a-cli -- decode input.mp4 output.wav MODEL.bin LS
 
 ```toml
 [dependencies]
-baka-av3a-core = "0.1.0"
-baka-av3a-container = "0.1.0" # optional MP4 support
+baka-av3a-core = "0.1.1"
+baka-av3a-container = "0.1.1" # optional MP4 support
 ```
 
 ```rust,no_run

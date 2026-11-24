@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — 2026-11-24
+
+- Reuse per-line input squares in GDN/IGDN inference while preserving float
+  accumulation order and error behavior.
+- Reduce normalization scratch storage from channels × lines to channels.
+- Add bitwise normalization regressions and an opt-in host benchmark. Existing
+  local mode matrices retain exact signed-16 PCM output.
+- Keep core, container and CLI package versions aligned; no public API or model
+  format changes. See PERFORMANCE.md for measurements and validation limits.
+
 ## 0.1.0
 
 - Initial public release of the pure Rust AV3A core, MP4 container library and CLI.

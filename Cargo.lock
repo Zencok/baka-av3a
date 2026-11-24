@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "baka-av3a-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "baka-av3a-container",
  "baka-av3a-core",
@@ -12,11 +12,11 @@ dependencies = [
 
 [[package]]
 name = "baka-av3a-container"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "baka-av3a-core",
 ]
 
 [[package]]
 name = "baka-av3a-core"
-version = "0.1.0"
+version = "0.1.1"

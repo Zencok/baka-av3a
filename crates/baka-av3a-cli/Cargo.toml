@@ -16,8 +16,8 @@ name = "baka-av3a"
 path = "src/main.rs"
 
 [dependencies]
-baka-av3a-core = { version = "0.1.0", path = "../baka-av3a-core" }
-baka-av3a-container = { version = "0.1.0", path = "../baka-av3a-container" }
+baka-av3a-core = { version = "0.1.1", path = "../baka-av3a-core" }
+baka-av3a-container = { version = "0.1.1", path = "../baka-av3a-container" }
 
 [lints]
 workspace = true
